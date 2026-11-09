@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Rankings - Book Review API</title>
+  <meta name="description" content="Explore ranked book lists by category based on algorithmic score and confidence.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+  <div class="background-decorations">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="site-nav">
+    <div class="nav-container">
+      <a href="/" class="brand-link">
+        <span class="brand-icon">📚</span>
+        <span class="brand-name">BookReview<span class="brand-accent">API</span></span>
+      </a>
+      <nav class="nav-menu">
+        <a href="/rankings" class="nav-item active">Rankings</a>
+        <a href="/" class="nav-item">Account</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-container">
+    <!-- Header Section -->
+    <section class="rankings-hero">
+      <div class="hero-badge">Category Leaderboards</div>
+      <h1 class="hero-title">Algorithmic Book Rankings</h1>
+      <p class="hero-subtitle">
+        Ranked lists calculated from verified reader scores, weighted confidence ratings, and review signals.
+      </p>
+
+      <!-- Category Filter Tabs -->
+      <div class="category-tabs" id="category-tabs" role="tablist" aria-label="Book Categories">
+        <button class="cat-tab active" data-category="fantasy" role="tab" aria-selected="true">🧙 Fantasy</button>
+        <button class="cat-tab" data-category="sci-fi" role="tab" aria-selected="false">🚀 Sci-Fi</button>
+        <button class="cat-tab" data-category="thriller" role="tab" aria-selected="false">🔍 Thriller</button>
+      </div>
+
+      <!-- Live Search Filter -->
+      <div class="search-bar-wrapper">
+        <input type="search" id="search-input" placeholder="Filter ranked books by title or author..."
+          aria-label="Filter books">
+      </div>
+    </section>
+
+    <!-- Rankings Meta Bar -->
+    <div class="rankings-meta-bar">
+      <div>
+        <span class="meta-label">Viewing Category:</span>
+        <strong id="current-category-name" class="meta-highlight">Fantasy</strong>
+      </div>
+      <div>
+        <code id="current-api-endpoint" class="api-pill"></code>
+      </div>
+      <div>
+        <span class="meta-label">Ranked Books:</span>
+        <span id="total-count-badge" class="count-badge">0</span>
+      </div>
+    </div>
+
+    <!-- Alert Banner -->
+    <div id="alert-banner" class="alert-banner hidden" role="alert"></div>
+
+    <!-- Ranked Books Grid / List -->
+    <section id="rankings-list" class="rankings-list" aria-live="polite">
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading algorithmic rankings...</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Powered by FastAPI & MySQL &bull; <a href="/docs" target="_blank">Interactive Swagger Documentation</a></p>
+  </footer>
+
+  <script src="/static/rankings.js"></script>
+</body>
+
+</html>

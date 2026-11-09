@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Review API - Authentication</title>
+  <meta name="description" content="Sign in or register for the Book Review API platform.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+  <div class="background-decorations">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="site-nav">
+    <div class="nav-container">
+      <a href="/" class="brand-link">
+        <span class="brand-icon">📚</span>
+        <span class="brand-name">BookReview<span class="brand-accent">API</span></span>
+      </a>
+      <nav class="nav-menu">
+        <a href="/rankings" class="nav-item">Rankings</a>
+        <a href="/" class="nav-item active">Account</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="auth-container">
+    <header class="app-header">
+      <div class="logo-mark">📚</div>
+      <h1 class="app-title">Book Review API</h1>
+      <p class="app-subtitle">FastAPI & MySQL Authentication Portal</p>
+      <div id="system-status" class="status-badge status-checking">
+        <span class="status-dot"></span>
+        <span id="status-text">Checking backend...</span>
+      </div>
+    </header>
+
+    <!-- Global Alert / Toast Notification -->
+    <div id="alert-banner" class="alert-banner hidden" role="alert" aria-live="polite"></div>
+
+    <!-- Auth Card (Forms) -->
+    <section id="auth-card" class="card auth-card">
+      <nav class="tabs-nav" aria-label="Authentication modes">
+        <button id="tab-login" class="tab-btn active" type="button" aria-selected="true" aria-controls="login-panel">
+          Sign In
+        </button>
+        <button id="tab-register" class="tab-btn" type="button" aria-selected="false" aria-controls="register-panel">
+          Register
+        </button>
+      </nav>
+
+      <!-- Sign In Form -->
+      <div id="login-panel" class="tab-panel active" role="tabpanel" aria-labelledby="tab-login">
+        <form id="form-login" novalidate>
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <div class="input-wrapper">
+              <input type="email" id="login-email" name="email" autocomplete="username" placeholder="name@example.com"
+                required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="label-row">
+              <label for="login-password">Password</label>
+            </div>
+            <div class="input-wrapper password-wrapper">
+              <input type="password" id="login-password" name="password" autocomplete="current-password"
+                placeholder="Enter your password" required>
+              <button type="button" class="btn-toggle-password" aria-label="Toggle password visibility"
+                data-target="login-password">
+                👁️
+              </button>
+            </div>
+          </div>
+
+          <button id="btn-login-submit" type="submit" class="btn btn-primary btn-block">
+            <span class="btn-text">Sign In</span>
+            <span class="spinner hidden"></span>
+          </button>
+        </form>
+
+        <footer class="panel-footer">
+          <p>Don't have an account? <button type="button" class="link-btn" id="link-to-register">Register here</button>
+          </p>
+        </footer>
+      </div>
+
+      <!-- Register Form -->
+      <div id="register-panel" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-register">
+        <form id="form-register" novalidate>
+          <div class="form-group">
+            <label for="register-email">Email Address</label>
+            <div class="input-wrapper">
+              <input type="email" id="register-email" name="email" autocomplete="username"
+                placeholder="name@example.com" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="register-password">Password <span class="help-text">(Min. 6 characters)</span></label>
+            <div class="input-wrapper password-wrapper">
+              <input type="password" id="register-password" name="password" autocomplete="new-password" minlength="6"
+                placeholder="Create a strong password" required>
+              <button type="button" class="btn-toggle-password" aria-label="Toggle password visibility"
+                data-target="register-password">
+                👁️
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="register-role">Account Role</label>
+            <div class="input-wrapper select-wrapper">
+              <select id="register-role" name="role" required>
+                <option value="reader" selected>Reader (Standard Access)</option>
+                <option value="admin">Admin (Full Privileges)</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="btn-register-submit" type="submit" class="btn btn-primary btn-block">
+            <span class="btn-text">Create Account</span>
+            <span class="spinner hidden"></span>
+          </button>
+        </form>
+
+        <footer class="panel-footer">
+          <p>Already have an account? <button type="button" class="link-btn" id="link-to-login">Sign in here</button>
+          </p>
+        </footer>
+      </div>
+    </section>
+
+    <!-- User Profile Dashboard (Shown when logged in) -->
+    <section id="user-dashboard" class="card dashboard-card hidden">
+      <div class="dashboard-header">
+        <div class="user-avatar" id="dash-avatar">👤</div>
+        <div>
+          <h2 class="dash-title" id="dash-email">user@example.com</h2>
+          <div class="dash-badges">
+            <span class="badge" id="dash-role">reader</span>
+            <span class="badge badge-success" id="dash-status">Active</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-details">
+        <div class="detail-row">
+          <span class="detail-label">User ID:</span>
+          <span class="detail-value" id="dash-id">--</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Registered:</span>
+          <span class="detail-value" id="dash-created">--</span>
+        </div>
+        <div class="detail-row token-row">
+          <span class="detail-label">Access Token:</span>
+          <div class="token-preview-wrapper">
+            <code id="dash-token" class="token-code">--</code>
+            <button id="btn-copy-token" class="btn btn-secondary btn-sm" type="button">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-actions">
+        <button id="btn-refresh-profile" class="btn btn-secondary" type="button">Verify with /api/auth/me</button>
+        <a href="/docs" target="_blank" class="btn btn-outline">Explore API Docs ↗</a>
+        <button id="btn-logout" class="btn btn-danger" type="button">Sign Out</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+
+</html>

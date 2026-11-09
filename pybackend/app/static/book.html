@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Details & Reviews - Book Review API</title>
+  <meta name="description" content="Detailed score, confidence, rankings, and reader reviews for this book.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+  <div class="background-decorations">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="site-nav">
+    <div class="nav-container">
+      <a href="/" class="brand-link">
+        <span class="brand-icon">📚</span>
+        <span class="brand-name">BookReview<span class="brand-accent">API</span></span>
+      </a>
+      <nav class="nav-menu">
+        <a href="/rankings" class="nav-item">Rankings</a>
+        <a href="/" class="nav-item">Account</a>
+        <a href="/docs" target="_blank" class="nav-item nav-docs">API Docs ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-container book-detail-container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-nav">
+      <a href="/rankings" id="back-to-rankings" class="breadcrumb-link">&larr; Back to Rankings</a>
+      <span class="breadcrumb-sep">/</span>
+      <span id="breadcrumb-current-book" class="breadcrumb-current">Book</span>
+    </nav>
+
+    <!-- Global Alert / Notification -->
+    <div id="alert-banner" class="alert-banner hidden" role="alert"></div>
+
+    <!-- Main Hero Book Card -->
+    <section id="book-hero-card" class="card book-hero-card">
+      <div class="loading-state" id="book-loading">
+        <div class="spinner"></div>
+        <p>Loading book data from /api/v1/books/{slug}.json...</p>
+      </div>
+
+      <div id="book-content" class="book-hero-layout hidden">
+        <!-- Cover image & badges -->
+        <div class="book-hero-media">
+          <img id="book-cover-img" src="" alt="Book Cover" class="book-cover-large" />
+          <div class="book-badges-col">
+            <span id="book-rank-badge" class="badge badge-rank">#1 in Category</span>
+            <span id="book-category-badge" class="badge">Category</span>
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div class="book-hero-body">
+          <h1 id="book-title" class="book-main-title">Book Title</h1>
+          <p id="book-author" class="book-main-author">by Author Name</p>
+
+          <!-- Score & Confidence Box -->
+          <div class="score-card-box">
+            <div class="score-stat">
+              <span class="stat-number" id="book-reviews-count">0</span>
+              <span class="stat-sub">Reviews</span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="book-description-section">
+            <h3>Synopsis</h3>
+            <p id="book-description" class="book-description-text">Description goes here...</p>
+          </div>
+
+          <!-- Identifiers -->
+          <div class="book-identifiers-section">
+            <span class="id-label">Identifiers:</span>
+            <div id="book-identifiers-list" class="identifiers-tags"></div>
+          </div>
+
+          <!-- Direct API link -->
+          <div class="api-inspect-row">
+            <span class="api-label">Live API:</span>
+            <a id="book-api-link" href="#" target="_blank" class="api-pill-link">
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Similar Books Section -->
+    <section id="similar-books-section" class="card similar-books-card hidden">
+      <h2 class="section-heading">Similar Books in This Category</h2>
+      <div id="similar-books-grid" class="similar-grid"></div>
+    </section>
+
+    <!-- User Vote (1-5) and Review Section -->
+    <section class="card reviews-section" id="reviews-section">
+      <div class="reviews-header">
+        <div>
+          <h2 class="section-heading">Reader Reviews & Ratings</h2>
+          <p class="section-sub">Vote 1-5 stars and share your thoughts on this book.</p>
+        </div>
+      </div>
+
+      <!-- Voting Form (Interactive 1-5 Stars) -->
+      <div class="vote-form-card">
+        <h3 class="vote-form-title">Leave a Rating & Review</h3>
+        <form id="review-form" novalidate>
+          <!-- Star Rating Widget -->
+          <div class="form-group">
+            <label class="star-rating-label">
+              Your Rating (1 to 5 Stars): <span id="star-rating-text" class="rating-feedback-text">Select rating</span>
+            </label>
+            <div class="star-rating-widget" id="star-widget" role="radiogroup" aria-label="1 to 5 star rating">
+              <button type="button" class="star-btn" data-value="1" aria-label="1 star">&#9733;</button>
+              <button type="button" class="star-btn" data-value="2" aria-label="2 stars">&#9733;</button>
+              <button type="button" class="star-btn" data-value="3" aria-label="3 stars">&#9733;</button>
+              <button type="button" class="star-btn" data-value="4" aria-label="4 stars">&#9733;</button>
+              <button type="button" class="star-btn" data-value="5" aria-label="5 stars">&#9733;</button>
+            </div>
+            <input type="hidden" id="selected-rating" name="rating" value="5" required />
+          </div>
+
+          <div class="form-group">
+            <label for="reviewer-name">Your Name</label>
+            <div class="input-wrapper">
+              <input type="text" id="reviewer-name" name="reviewer_name"
+                placeholder="Enter your name (or leave empty for Anonymous)" maxlength="100" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="review-comment">Your Review</label>
+            <div class="input-wrapper">
+              <textarea id="review-comment" name="comment" rows="4"
+                placeholder="Write your review here... What made this book special?" required minlength="3"
+                maxlength="3000"></textarea>
+            </div>
+          </div>
+
+          <button id="btn-submit-review" type="submit" class="btn btn-primary">
+            <span class="btn-text">Submit Review</span>
+            <span class="spinner hidden"></span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Existing Reviews List -->
+      <div class="reviews-feed">
+        <h3 class="reviews-feed-title">All Reviews (<span id="feed-reviews-count">0</span>)</h3>
+        <div id="reviews-list" class="reviews-list-container">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Powered by FastAPI & MySQL &bull; <a href="/docs" target="_blank">Interactive Swagger Documentation</a></p>
+  </footer>
+
+  <script src="/static/book.js"></script>
+</body>
+
+</html>
