@@ -15,6 +15,7 @@ from ..security import (
     require_admin,
     verify_password,
 )
+print('hello')
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
